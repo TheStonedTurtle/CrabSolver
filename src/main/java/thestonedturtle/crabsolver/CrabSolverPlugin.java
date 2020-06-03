@@ -30,9 +30,11 @@ import java.util.Map;
 import javax.inject.Inject;
 import lombok.Getter;
 import net.runelite.api.Client;
+import net.runelite.api.GameState;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.events.GameObjectDespawned;
 import net.runelite.api.events.GameObjectSpawned;
+import net.runelite.api.events.GameStateChanged;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
@@ -76,6 +78,15 @@ public class CrabSolverPlugin extends Plugin
 	{
 		crystalMap.clear();
 		overlayManager.remove(overlay);
+	}
+
+	@Subscribe
+	public void onGameStateChanged(GameStateChanged c)
+	{
+		if (c.getGameState() == GameState.LOADING)
+		{
+			crystalMap.clear();
+		}
 	}
 
 	@Subscribe
