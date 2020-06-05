@@ -30,8 +30,8 @@ import java.util.Map;
 import javax.inject.Inject;
 import lombok.Getter;
 import net.runelite.api.Client;
+import net.runelite.api.GameObject;
 import net.runelite.api.GameState;
-import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.events.GameObjectDespawned;
 import net.runelite.api.events.GameObjectSpawned;
 import net.runelite.api.events.GameStateChanged;
@@ -65,7 +65,7 @@ public class CrabSolverPlugin extends Plugin
 	}
 
 	@Getter
-	private final Map<CrabCrystal, LocalPoint> crystalMap = new HashMap<>();
+	private final Map<CrabCrystal, GameObject> crystalMap = new HashMap<>();
 
 	@Override
 	public void startUp()
@@ -98,7 +98,7 @@ public class CrabSolverPlugin extends Plugin
 			return;
 		}
 
-		crystalMap.put(crystal, e.getGameObject().getLocalLocation());
+		crystalMap.put(crystal, e.getGameObject());
 	}
 
 	@Subscribe
