@@ -52,7 +52,7 @@ public class CrabSolverOverlay extends Overlay
 
 	@Inject
 	private CrabSolverOverlay(final CrabSolverPlugin plugin, final CrabSolverConfig config,
-							  final SkillIconManager iconManager, final Client client)
+							final SkillIconManager iconManager, final Client client)
 	{
 		this.plugin = plugin;
 		this.config = config;
