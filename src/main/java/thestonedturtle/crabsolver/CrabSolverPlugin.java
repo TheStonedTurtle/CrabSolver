@@ -25,6 +25,8 @@
 package thestonedturtle.crabsolver;
 
 import com.google.inject.Provides;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
@@ -67,10 +69,14 @@ public class CrabSolverPlugin extends Plugin
 	@Getter
 	private final Map<CrabCrystal, GameObject> crystalMap = new HashMap<>();
 
+	@Getter
+	private final Collection<CrabTile> tiles = new ArrayList<>();
+
 	@Override
 	public void startUp()
 	{
 		overlayManager.add(overlay);
+		loadTiles();
 	}
 
 	@Override
@@ -78,6 +84,7 @@ public class CrabSolverPlugin extends Plugin
 	{
 		crystalMap.clear();
 		overlayManager.remove(overlay);
+		tiles.clear();
 	}
 
 	@Subscribe
@@ -86,6 +93,10 @@ public class CrabSolverPlugin extends Plugin
 		if (c.getGameState() == GameState.LOADING)
 		{
 			crystalMap.clear();
+		}
+		else if (c.getGameState() == GameState.LOGGED_IN)
+		{
+			loadTiles();
 		}
 	}
 
@@ -111,5 +122,23 @@ public class CrabSolverPlugin extends Plugin
 		}
 
 		crystalMap.remove(crystal);
+	}
+
+	private void loadTiles()
+	{
+		tiles.clear();
+
+		final int[] regions = client.getMapRegions();
+		if (regions == null)
+		{
+			return;
+		}
+
+		for (int region : regions)
+		{
+			final Collection<CrabTile> regionTiles = CrabTile.getByRegion(region);
+			regionTiles.forEach(tile -> tile.setWorldPoints(client));
+			tiles.addAll(regionTiles);
+		}
 	}
 }

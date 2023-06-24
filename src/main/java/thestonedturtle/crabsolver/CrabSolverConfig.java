@@ -27,6 +27,7 @@ package thestonedturtle.crabsolver;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
+import net.runelite.client.config.ConfigSection;
 
 @ConfigGroup("crabsolver")
 public interface CrabSolverConfig extends Config
@@ -51,5 +52,48 @@ public interface CrabSolverConfig extends Config
 	default boolean displayStyle()
 	{
 		return true;
+	}
+
+	@ConfigSection(
+		name = "Ground Markers",
+		description = "The settings for controlling how ground marker are displayed",
+		position = 2
+	)
+	String tileSection = "tileSection";
+
+	@ConfigItem(
+		position = 0,
+		keyName = "markTiles",
+		name = "Mark  Tiles",
+		description = "Configures whether to mark the tiles the crabs need to be on to solve the puzzle",
+		section = tileSection
+	)
+	default boolean markTiles()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		position = 1,
+		keyName = "borderWidth",
+		name = "Border Width",
+		description = "Width of the marked tile border",
+		section = tileSection
+	)
+	default double borderWidth()
+	{
+		return 2;
+	}
+
+	@ConfigItem(
+		position = 2,
+		keyName = "fillOpacity",
+		name = "Fill Opacity",
+		description = "Opacity of the tile fill color",
+		section = tileSection
+	)
+	default int fillOpacity()
+	{
+		return 50;
 	}
 }

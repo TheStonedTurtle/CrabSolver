@@ -24,14 +24,20 @@
  */
 package thestonedturtle.crabsolver;
 
+import com.google.common.base.Strings;
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.Polygon;
+import java.awt.Stroke;
 import java.awt.image.BufferedImage;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.Perspective;
 import net.runelite.api.Point;
+import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.game.SkillIconManager;
 import net.runelite.client.ui.overlay.Overlay;
@@ -103,6 +109,52 @@ public class CrabSolverOverlay extends Overlay
 			}
 		});
 
+		if (config.markTiles())
+		{
+			final Stroke borderStroke = new BasicStroke((float) config.borderWidth());
+			for (final CrabTile tile : plugin.getTiles())
+			{
+				for (final WorldPoint p : tile.getWorldPoints())
+				{
+					if (p.getPlane() != client.getPlane())
+					{
+						continue;
+					}
+
+					if (playerPosition.distanceTo(p) > MAX_RENDER_DISTANCE)
+					{
+						continue;
+					}
+
+					drawTile(graphics, p, tile, borderStroke);
+				}
+			}
+		}
+
 		return null;
+	}
+
+	private void drawTile(Graphics2D graphics, WorldPoint p, CrabTile tile, Stroke borderStroke)
+	{
+		LocalPoint lp = LocalPoint.fromWorld(client, p);
+		if (lp == null)
+		{
+			return;
+		}
+
+		Polygon poly = Perspective.getCanvasTilePoly(client, lp);
+		if (poly != null)
+		{
+			OverlayUtil.renderPolygon(graphics, poly, tile.getColor(), new Color(0, 0, 0, config.fillOpacity()), borderStroke);
+		}
+
+		if (!Strings.isNullOrEmpty(tile.getLabel()))
+		{
+			Point canvasTextLocation = Perspective.getCanvasTextLocation(client, graphics, lp, tile.getLabel(), 0);
+			if (canvasTextLocation != null)
+			{
+				OverlayUtil.renderTextLocation(graphics, canvasTextLocation, tile.getLabel(), tile.getColor());
+			}
+		}
 	}
 }
