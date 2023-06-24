@@ -49,7 +49,7 @@ import net.runelite.client.ui.overlay.OverlayUtil;
 public class CrabSolverOverlay extends Overlay
 {
 	// Must be within this many tiles for the overlay to render
-	private static final int MAX_RENDER_DISTANCE = 15;
+	private static final int MAX_RENDER_DISTANCE = 32;
 
 	private final CrabSolverPlugin plugin;
 	private final CrabSolverConfig config;
